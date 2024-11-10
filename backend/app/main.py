@@ -1,5 +1,4 @@
 from typing import Annotated
-import os
 from fastapi import Depends, FastAPI, HTTPException, Query
 from sqlmodel import Session, select
 
@@ -11,9 +10,11 @@ SessionDep = Annotated[Session, Depends(get_session)]
 
 app = FastAPI()
 
+
 @app.on_event("startup")
 def on_startup():
     init_db()
+
 
 @app.post("/heroes/")
 def create_hero(hero: Hero, session: SessionDep) -> Hero:
@@ -30,6 +31,7 @@ def read_heroes(
     limit: Annotated[int, Query(le=100)] = 100,
 ) -> list[Hero]:
     heroes = session.exec(select(Hero).offset(offset).limit(limit)).all()
+
     return heroes
 
 
