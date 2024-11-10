@@ -1,12 +1,14 @@
 # models.py
-from sqlalchemy import Column, Integer, String
-from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import declarative_base
+from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict, Field
+
+
+class User(BaseModel):
+    model_config = ConfigDict(populate_by_name=True)
+
+    name: str = Field(alias='full_name')  
+    email: int
 
 Base = declarative_base()
 
-class User(Base):
-    __tablename__ = "users"
-
-    id = Column(Integer, primary_key=True, index=True)
-    name = Column(String, index=True)
-    email = Column(String, unique=True, index=True)

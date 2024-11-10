@@ -6,14 +6,15 @@ from models import Base, User
 from database import engine, get_db
 from schemas import UserCreate, User
 import uvicorn
+from contextlib import asynccontextmanager
 
-app = FastAPI()
-
-# Create the database tables
-@app.on_event("startup")
-async def startup():
+@asynccontextmanager
+async def lifespan(app: FastAPI):
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
+    yield
+
+app = FastAPI(lifespan=lifespan)
 
 @app.post("/users/", response_model=User)
 async def create_user(user: UserCreate, db: AsyncSession = Depends(get_db)):
