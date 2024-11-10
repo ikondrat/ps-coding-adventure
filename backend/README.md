@@ -14,7 +14,9 @@
 ```bash
 pipenv shell
 pipenv install
-PYTHONPATH=src uvicorn src.main:app --reload
+
+uvicorn main:app --app-dir app --reload
+
 ```
 
 # Create a virtual environment

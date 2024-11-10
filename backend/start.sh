@@ -1,3 +1,3 @@
 #!/bin/bash
 
-PYTHONPATH=src uvicorn src.main:app --reload
+uvicorn main:app --app-dir app --reload

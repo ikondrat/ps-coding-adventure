@@ -16,7 +16,7 @@ services:
     environment:
       POSTGRES_PASSWORD:
       PGGSSENCMODE:
-      POSTGRES_USER: "postgres"
+
   postgrestest:
     image: postgres:17-alpine
     stdin_open: true
@@ -34,8 +34,6 @@ services:
     environment:
       POSTGRES_PASSWORD:
       PGGSSENCMODE:
-      POSTGRES_USER: "postgres"
-      POSGRESS_DB: "test_database"
 
 volumes:
   db_data:
