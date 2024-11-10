@@ -1,0 +1,40 @@
+// .vscode/launch.json
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python: FastAPI with Pipenv",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/app/main.py", // The main script, adjust if necessary
+            "args": [
+                "-m",
+                "uvicorn",
+                "app.main", // Adjust path to match your app location
+                "--reload"
+            ],
+            "preLaunchTask": "Activate Pipenv", // Run the task to activate the virtual environment
+            "console": "integratedTerminal",
+            "env": {
+                "PYTHONPATH": "${workspaceFolder}/app"
+            },
+            "justMyCode": true
+        },
+        {
+            "name": "Python: FastAPI",
+            "type": "python",
+            "request": "launch",
+            "module": "uvicorn",
+            "args": [
+                "app.main:app", // Adjust "app.main:app" to your FastAPI app path
+                "--reload"
+            ],
+            "jinja": true,
+            "console": "integratedTerminal",
+            "preLaunchTask": "Install Dependencies", // Add this line
+            "env": {
+                "PYTHONPATH": "${workspaceFolder}/app" // Adjust to your directory structure
+            }
+        }
+    ]
+}

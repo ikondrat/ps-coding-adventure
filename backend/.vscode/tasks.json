@@ -1,0 +1,32 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Install Dependencies",
+            "type": "shell",
+            "command": "pipenv install",
+            "problemMatcher": [],
+            "group": "build",
+            "dependsOn": "Activate Pipenv",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared"
+            }
+        },
+        {
+            "label": "Activate Pipenv",
+            "type": "shell",
+            "command": "pipenv shell",
+            "problemMatcher": [],
+            "isBackground": true, // Mark as background task to avoid waiting for completion
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared"
+            }
+        }
+    ]
+}
