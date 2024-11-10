@@ -7,6 +7,7 @@
 
 <img alt="logo" class="logo" src={electronLogo} />
 <div class="creator">Powered by electron-vite</div>
+<h1 class="text-3xl font-bold underline">Hello world!</h1>
 <div class="text">
   Build an Electron app with
   <span class="svelte">Svelte</span>
