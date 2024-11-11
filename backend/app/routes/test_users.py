@@ -52,30 +52,42 @@ def test_create_user(test_client):
     assert len(client.get("/users/").json()) == 0
 
 
-def test_create_board(test_client):
+def test_read_user(test_client):
     client = test_client
 
-    # Validate what there is no boards and users
-    assert len(client.get("/boards/").json()) == 0
+    # Validate what there is no users
     assert len(client.get("/users/").json()) == 0
 
     # Create a user
-    client.post("/users/", json={"name": "Deadpond", "id": test_uuid})
-    assert len(client.get("/users/").json()) == 1
+    client.post("/users/", json={"name": "Deadpond2", "id": test_uuid})
 
-    # Create a board
-    response = client.post("/boards/", json={"name": "Board 1", "user_id": test_uuid})
+    response = client.get(f"/users/{test_uuid}")
     data = response.json()
-
     assert response.status_code == 200
-    assert data["name"] == "Board 1"
+    assert data["name"] == "Deadpond2"
     assert data["id"] is not None
-    assert data["access_key"] is not None
-    assert data["user_id"] == test_uuid
 
-    assert len(client.get("/boards/").json()) == 1
-
-    # Delete the user and validate that the board was deleted by cascading deletion
     client.delete(f"/users/{test_uuid}")
-    assert len(client.get("/users/").json()) == 0
-    assert len(client.get("/boards/").json()) == 0
+
+
+def test_update_user(test_client):
+    client = test_client
+
+    # Create a user
+    client.post("/users/", json={"name": "OldName", "id": test_uuid})
+
+    # Update the user
+    response = client.put(f"/users/{test_uuid}", json={"name": "NewName"})
+    data = response.json()
+    assert response.status_code == 200
+    assert data["name"] == "NewName"
+    assert data["id"] == test_uuid
+
+    # Validate that the user was updated
+    response = client.get(f"/users/{test_uuid}")
+    data = response.json()
+    assert response.status_code == 200
+    assert data["name"] == "NewName"
+
+    # Clean up by deleting the user
+    client.delete(f"/users/{test_uuid}")

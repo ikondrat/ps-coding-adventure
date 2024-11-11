@@ -40,7 +40,7 @@ class Board(SQLModel, table=True):
     # Define a relationship to Todo with cascade delete
     # todos: list["Todo"] | None = Relationship(
     #     back_populates="board",
-    #     sa_relationship_kwargs={"cascade": "all, delete-orphan"},
+    #     cascade_delete=True,
     # )
 
 
