@@ -4,6 +4,7 @@ from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlmodel import Session, select
 from models import Board, Todo
 from db import get_session
+from datetime import datetime
 
 router = APIRouter()
 SessionDep = Annotated[Session, Depends(get_session)]
@@ -13,6 +14,33 @@ SessionDep = Annotated[Session, Depends(get_session)]
 def create_todo(todo: Todo, session: SessionDep) -> Todo:
     session.add(todo)
 
+    session.commit()
+    session.refresh(todo)
+
+    return todo
+
+
+@router.put("/todos/{todo_id}")
+def update_todo(todo_id: UUID, updated_todo: Todo, session: SessionDep) -> Todo:
+    todo = session.exec(select(Todo).where(Todo.id == todo_id)).one_or_none()
+    if not todo:
+        raise HTTPException(status_code=404, detail="Todo not found")
+
+    # Check for valid state transition
+    valid_transitions = {
+        "TODO": ["ONGOING"],
+        "ONGOING": ["DONE", "TODO"],
+        "DONE": ["ONGOING"],
+    }
+
+    if updated_todo.state not in valid_transitions[todo.state]:
+        raise HTTPException(status_code=400, detail="Invalid state transition")
+
+    todo.title = updated_todo.title
+    todo.state = updated_todo.state
+    todo.updated_at = datetime.utcnow()  # Assuming last_updated is a field in Todo
+
+    session.add(todo)
     session.commit()
     session.refresh(todo)
 

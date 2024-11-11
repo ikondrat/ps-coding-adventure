@@ -37,6 +37,8 @@ class Todo(SQLModel, table=True):
     id: UUID | None = Field(default_factory=uuid4, primary_key=True)
     title: str
     state: TodoState = Field(default=TodoState.TODO)
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+    updated_at: datetime = Field(default_factory=datetime.utcnow)
 
     # Define a relationship to User
     user_id: UUID = Field(default=None, foreign_key="user.id")

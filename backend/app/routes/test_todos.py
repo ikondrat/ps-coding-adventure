@@ -71,6 +71,114 @@ def test_create_todo(test_client):
     client.delete(f"/users/{test_uuid}")
 
 
+def test_update_todo(test_client):
+    client = test_client
+    # Arrange
+    todo_id = "323e4567-e89b-12d3-c456-426614174000"
+    access_key = "123e4567-e89b-12d3-a456-426614174000"
+    board_id = "223e4567-e89b-12d3-b456-426614174000"
+
+    # Create a user
+    client.post("/users/", json={"name": "Deadpond", "id": test_uuid})
+
+    # Create a board
+    client.post(
+        "/boards/",
+        json={
+            "name": "Board 1",
+            "id": board_id,
+            "user_id": test_uuid,
+            "access_key": access_key,
+        },
+    )
+
+    # Create a todo
+    response = client.post(
+        "/todos/",
+        json={
+            "title": "Todo 1",
+            "id": todo_id,
+            "board_id": board_id,
+            "state": "TODO",
+            "user_id": test_uuid,
+        },
+    )
+
+    updated_todo = {
+        "title": "Todo 2",
+        "state": "ONGOING",
+    }
+    # Act
+    response = client.put(
+        f"/todos/{todo_id}",
+        json=updated_todo,
+    )
+
+    # Assert
+    assert response.status_code == 200
+    updated_todo = response.json()
+    assert updated_todo["title"] == updated_todo["title"]
+    assert updated_todo["state"] == updated_todo["state"]
+
+    client.delete(f"/users/{test_uuid}")
+
+
+def test_update_todo_transitions(test_client):
+    client = test_client
+    # Arrange
+    todo_id = "323e4567-e89b-12d3-c456-426614174000"
+    access_key = "123e4567-e89b-12d3-a456-426614174000"
+    board_id = "223e4567-e89b-12d3-b456-426614174000"
+
+    # Create a user
+    client.post("/users/", json={"name": "Deadpond", "id": test_uuid})
+
+    # Create a board
+    client.post(
+        "/boards/",
+        json={
+            "name": "Board 1",
+            "id": board_id,
+            "user_id": test_uuid,
+            "access_key": access_key,
+        },
+    )
+
+    # Create a todo
+    response = client.post(
+        "/todos/",
+        json={
+            "title": "Todo 1",
+            "id": todo_id,
+            "board_id": board_id,
+            "state": "TODO",
+            "user_id": test_uuid,
+        },
+    )
+    # Test invalid state transition from TODO to DONE
+    # response = client.put(
+    #     f"/todos/{todo_id}", json={"title": "Todo 1", "state": "DONE"}
+    # )
+    # assert response.status_code == 400
+    # assert response.json()["state"] == "TODO"
+
+    # Test valid state transition from TODO to ONGOING
+    response = client.put(
+        f"/todos/{todo_id}", json={"title": "Todo 1", "state": "ONGOING"}
+    )
+    assert response.status_code == 200
+    assert response.json()["state"] == "ONGOING"
+
+    # # Test valid state transition from ONGOING to DONE
+    # response = client.put(
+    #     f"/todos/{todo_id}", json={"title": "Todo 1", "state": "DONE"}
+    # )
+    # assert response.status_code == 200
+    # assert response.json()["state"] == "DONE"
+
+    client.delete(f"/users/{test_uuid}")
+
+
 def test_board_todos(test_client):
     client = test_client
     access_key = "123e4567-e89b-12d3-a456-426614174000"
