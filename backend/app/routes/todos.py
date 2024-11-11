@@ -19,6 +19,22 @@ def create_todo(todo: Todo, session: SessionDep) -> Todo:
     return todo
 
 
+@router.put("/todos/{todo_id}")
+def update_todo(todo_id: UUID, updated_todo: Todo, session: SessionDep) -> Todo:
+    todo = session.exec(select(Todo).where(Todo.id == todo_id)).one_or_none()
+    if not todo:
+        raise HTTPException(status_code=404, detail="Todo not found")
+
+    todo.title = updated_todo.title
+    todo.state = updated_todo.state
+
+    session.add(todo)
+    session.commit()
+    session.refresh(todo)
+
+    return todo
+
+
 @router.get("/boards/{board_id}/todos/")
 def read_todos(
     board_id: UUID,
