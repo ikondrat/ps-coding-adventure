@@ -37,12 +37,11 @@ class Todo(SQLModel, table=True):
     id: UUID | None = Field(default_factory=uuid4, primary_key=True)
     title: str
     state: TodoState = Field(default=TodoState.TODO)
-    last_updated: datetime = Field(default_factory=datetime.utcnow)
 
     # Define a relationship to User
     user_id: UUID = Field(default=None, foreign_key="user.id")
     user: User | None = Relationship(back_populates="todos")
 
     # Define a relationship to Board
-    board_id: UUID | None = Field(default=None, foreign_key="board.id")
-    board: Board = Relationship(back_populates="todos")
+    board_id: UUID = Field(default=None, foreign_key="board.id")
+    board: Board | None = Relationship(back_populates="todos")

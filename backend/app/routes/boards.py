@@ -32,17 +32,19 @@ def read_boards(
 
 @router.get("/boards/{access_key}")
 def read_board(access_key: str, session: SessionDep) -> Board:
-    statement = select(Board).where(Board.access_key == access_key)
-    board = session.exec(statement).one_or_none()
+    board = session.exec(
+        select(Board).where(Board.access_key == access_key)
+    ).one_or_none()
     if not board:
         raise HTTPException(status_code=404, detail="Board not found")
     return board
 
 
 @router.delete("/boards/{access_key}")
-def delete_board(user_id: UUID, board_id: UUID, session: SessionDep):
-    statement = select(Board).where(Board.access_key == access_key)
-    board = session.exec(statement).one_or_none()
+def delete_board(access_key: str, session: SessionDep):
+    board = session.exec(
+        select(Board).where(Board.access_key == access_key)
+    ).one_or_none()
     if not board:
         raise HTTPException(status_code=404, detail="Board not found")
 

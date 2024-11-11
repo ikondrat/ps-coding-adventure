@@ -29,8 +29,7 @@ def read_users(
 
 @router.get("/users/{user_id}")
 def read_user(user_id: UUID, session: SessionDep) -> User:
-    statement = select(User).where(User.id == user_id)
-    user = session.exec(statement).one_or_none()
+    user = session.exec(select(User).where(User.id == user_id)).one_or_none()
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
     return user
@@ -38,8 +37,7 @@ def read_user(user_id: UUID, session: SessionDep) -> User:
 
 @router.get("/users/{user_id}/boards")
 def read_user_boards(user_id: UUID, session: SessionDep) -> list[Board]:
-    statement = select(User).where(User.id == user_id)
-    user = session.exec(statement).one_or_none()
+    user = session.exec(select(User).where(User.id == user_id)).one_or_none()
     boards = user.boards
     if not boards:
         raise HTTPException(status_code=404, detail="Boards not found")
@@ -49,8 +47,7 @@ def read_user_boards(user_id: UUID, session: SessionDep) -> list[Board]:
 
 @router.put("/users/{user_id}")
 def update_user(user_id: UUID, updated_user: User, session: SessionDep) -> User:
-    statement = select(User).where(User.id == user_id)
-    user = session.exec(statement).one_or_none()
+    user = session.exec(select(User).where(User.id == user_id)).one_or_none()
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
 
