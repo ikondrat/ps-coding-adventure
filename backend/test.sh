@@ -1,2 +1,2 @@
 #!/bin/bash
-PYTHONPATH=app pytest
+PYTHONPATH=app pytest -v

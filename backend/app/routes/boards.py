@@ -30,47 +30,20 @@ def read_boards(
     return boards
 
 
-@router.get("/boards/{board_id}")
-def read_board(board_id: UUID, session: SessionDep) -> Board:
-    statement = select(Board).where(Board.id == board_id)
-    board = session.exec(statement)
+@router.get("/boards/{access_key}")
+def read_board(access_key: str, session: SessionDep) -> Board:
+    statement = select(Board).where(Board.access_key == access_key)
+    board = session.exec(statement).one_or_none()
     if not board:
         raise HTTPException(status_code=404, detail="Board not found")
     return board
 
 
-@router.put("/boards/{board_id}")
-def update_board(
-    user_id: UUID, board_id: UUID, updated_board: Board, session: SessionDep
-) -> Board:
-    user = session.get(User, user_id)
-    if not user:
-        raise HTTPException(status_code=404, detail="User not found")
-
-    board = session.get(Board, board_id)
-    if not board or board not in user.boards:
-        raise HTTPException(status_code=404, detail="Board not found")
-
-    # Update fields
-    board.title = updated_board.title
-    board.description = (
-        updated_board.description
-    )  # Assuming Board has a description field
-
-    session.add(board)
-    session.commit()
-    session.refresh(board)
-    return board  # Return the updated board
-
-
-@router.delete("/boards/{board_id}")
+@router.delete("/boards/{access_key}")
 def delete_board(user_id: UUID, board_id: UUID, session: SessionDep):
-    user = session.get(User, user_id)
-    if not user:
-        raise HTTPException(status_code=404, detail="User not found")
-
-    board = session.get(Board, board_id)
-    if not board or board not in user.boards:
+    statement = select(Board).where(Board.access_key == access_key)
+    board = session.exec(statement).one_or_none()
+    if not board:
         raise HTTPException(status_code=404, detail="Board not found")
 
     session.delete(board)

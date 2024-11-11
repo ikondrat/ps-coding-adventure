@@ -2,7 +2,7 @@ from typing import Annotated
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlmodel import Session, select
 from uuid import UUID
-from models import User
+from models import Board, User
 from db import get_session
 
 router = APIRouter()
@@ -34,6 +34,17 @@ def read_user(user_id: UUID, session: SessionDep) -> User:
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
     return user
+
+
+@router.get("/users/{user_id}/boards")
+def read_user_boards(user_id: UUID, session: SessionDep) -> list[Board]:
+    statement = select(User).where(User.id == user_id)
+    user = session.exec(statement).one_or_none()
+    boards = user.boards
+    if not boards:
+        raise HTTPException(status_code=404, detail="Boards not found")
+
+    return boards
 
 
 @router.put("/users/{user_id}")

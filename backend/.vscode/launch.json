@@ -19,7 +19,7 @@
             "module": "pytest",
             "console": "integratedTerminal",
             "justMyCode": true,
-            "args": ["${file}"], // Verbose output for pytest
+            "args": ["${file}", "-v"], // Verbose output for pytest
             "env": {
                 "PYTHONPATH": "${workspaceFolder}/app"
             },
