@@ -123,7 +123,7 @@ def test_update_todo(test_client):
     client.delete(f"/users/{test_uuid}")
 
 
-def test_update_todo_transitions(test_client):
+def test_update_todo_transitions_valid(test_client):
     client = test_client
     # Arrange
     todo_id = "323e4567-e89b-12d3-c456-426614174000"
@@ -155,13 +155,6 @@ def test_update_todo_transitions(test_client):
             "user_id": test_uuid,
         },
     )
-    # Test invalid state transition from TODO to DONE
-    # response = client.put(
-    #     f"/todos/{todo_id}", json={"title": "Todo 1", "state": "DONE"}
-    # )
-    # assert response.status_code == 400
-    # assert response.json()["state"] == "TODO"
-
     # Test valid state transition from TODO to ONGOING
     response = client.put(
         f"/todos/{todo_id}", json={"title": "Todo 1", "state": "ONGOING"}
@@ -169,12 +162,88 @@ def test_update_todo_transitions(test_client):
     assert response.status_code == 200
     assert response.json()["state"] == "ONGOING"
 
-    # # Test valid state transition from ONGOING to DONE
-    # response = client.put(
-    #     f"/todos/{todo_id}", json={"title": "Todo 1", "state": "DONE"}
-    # )
-    # assert response.status_code == 200
-    # assert response.json()["state"] == "DONE"
+    # Test valid state transition from ONGOING to DONE
+    response = client.put(
+        f"/todos/{todo_id}", json={"title": "Todo 1", "state": "DONE"}
+    )
+    assert response.status_code == 200
+    assert response.json()["state"] == "DONE"
+
+    # Test valid state transition from DONE to ONGOING
+    response = client.put(
+        f"/todos/{todo_id}", json={"title": "Todo 1", "state": "ONGOING"}
+    )
+    assert response.status_code == 200
+    assert response.json()["state"] == "ONGOING"
+
+    # Test valid state transition from ONGOING to TODO
+    response = client.put(
+        f"/todos/{todo_id}", json={"title": "Todo 1", "state": "TODO"}
+    )
+    assert response.status_code == 200
+    assert response.json()["state"] == "TODO"
+
+    client.delete(f"/users/{test_uuid}")
+
+
+def test_update_todo_transitions_invalid(test_client):
+    client = test_client
+    # Arrange
+    todo_id = "323e4567-e89b-12d3-c456-426614174000"
+    access_key = "123e4567-e89b-12d3-a456-426614174000"
+    board_id = "223e4567-e89b-12d3-b456-426614174000"
+
+    # Create a user
+    client.post("/users/", json={"name": "Deadpond", "id": test_uuid})
+
+    # Create a board
+    client.post(
+        "/boards/",
+        json={
+            "name": "Board 1",
+            "id": board_id,
+            "user_id": test_uuid,
+            "access_key": access_key,
+        },
+    )
+
+    # Create a todo
+    response = client.post(
+        "/todos/",
+        json={
+            "title": "Todo 1",
+            "id": todo_id,
+            "board_id": board_id,
+            "state": "TODO",
+            "user_id": test_uuid,
+        },
+    )
+
+    # Test valid state transition from TODO to DONE
+    response = client.put(
+        f"/todos/{todo_id}", json={"title": "Todo 1", "state": "DONE"}
+    )
+    assert response.status_code == 400
+    data = response.json()
+    assert data["detail"] == "Invalid state transition"
+
+    response = client.put(
+        f"/todos/{todo_id}", json={"title": "Todo 1", "state": "ONGOING"}
+    )
+    assert response.status_code == 200
+
+    response = client.put(
+        f"/todos/{todo_id}", json={"title": "Todo 1", "state": "DONE"}
+    )
+    assert response.status_code == 200
+
+    # Test valid state transition from DONE to TODO
+    response = client.put(
+        f"/todos/{todo_id}", json={"title": "Todo 1", "state": "TODO"}
+    )
+    assert response.status_code == 400
+    data = response.json()
+    assert data["detail"] == "Invalid state transition"
 
     client.delete(f"/users/{test_uuid}")
 
