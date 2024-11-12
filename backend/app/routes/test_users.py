@@ -91,3 +91,25 @@ def test_update_user(test_client):
 
     # Clean up by deleting the user
     client.delete(f"/users/{test_uuid}")
+
+
+def test_signin_or_signup(test_client):
+    client = test_client
+    name = "Deadpond111"
+    # Validate what there is no users
+    assert len(client.get("/users/").json()) == 0
+
+    # Create a user
+    response = client.post("/signin", json={"name": name})
+    data = response.json()
+    assert response.status_code == 200
+    assert data["name"] == name
+    assert data["id"] is not None
+
+    # Validate that the user was created
+    assert len(client.get("/users/").json()) == 1
+
+    client.delete(f"/users/{data["id"]}")
+
+    # Validate that the user was deleted
+    assert len(client.get("/users/").json()) == 0

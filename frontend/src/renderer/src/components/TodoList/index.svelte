@@ -15,6 +15,8 @@
   }
 </script>
 
+<header class="text-2xl font-bold mb-4">TODO List:</header>
+
 <div class="flex">
   <div class="w-1/3 p-4">
     <h2 class="text-lg font-bold">TODO</h2>

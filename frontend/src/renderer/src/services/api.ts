@@ -1,37 +1,32 @@
-import createClient from 'openapi-fetch'
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import createClient, { type Middleware } from 'openapi-fetch'
 
 import type { paths } from '../../../types/api'
+import type { User } from '@/types'
 
-// declare fetcher for paths
-const fetcher = Fetcher.for<paths>()
+export const client = createClient<paths>({ baseUrl: 'http://localhost:8000/' })
 
-const client = createClient<paths>({ baseUrl: 'http://localhost:8000/' })
-
-// global configuration
-fetcher.configure({
-  baseUrl: 'http://localhost:8000/docs'
-})
-
-export const getUsers = fetcher.path('/users/').method('get').create()
-export const createUser = fetcher.path('/users/').method('post').create()
-export const getUser = fetcher.path('/users/{user_id}').method('get').create()
-
-export const loginOrCreateUser = async (user: string) => {
-  const {
-    data: { name },
-    error
-  } = await client.GET('/users/{user_id}', {
-    params: {
-      path: { user_id: user }
+export const signin = async (name: string): Promise<User> => {
+  const { data } = await client.POST('/signin', {
+    body: {
+      name
     }
   })
 
-  if (error) {
-    return error
-  }
-  if (name) {
-    return name
-  }
+  return data as User
 }
+// const myMiddleware: Middleware = {
+//   async onRequest({ request }) {
+//     // set "foo" header
+//     request.headers.set('foo', 'bar')
+//     return request
+//   },
+//   async onResponse({ request, response, options }) {
+//     const { body, ...resOptions } = response
+//     // change status of response
+//     return new Response(body, { ...resOptions, status: 200 })
+//   }
+// }
 
-fetcher.path('/login-or-create-user/').method('post').create()
+// client.use(myMiddleware)

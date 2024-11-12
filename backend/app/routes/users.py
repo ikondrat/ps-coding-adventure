@@ -68,3 +68,17 @@ def delete_user(user_id: UUID, session: SessionDep):
     session.delete(user)
     session.commit()
     return {"ok": True}
+
+
+@router.post("/signin")
+def signin_or_signup(user: User, session: SessionDep) -> User:
+    existing_user = session.exec(
+        select(User).where(User.name == user.name)
+    ).one_or_none()
+    if existing_user:
+        return existing_user
+
+    session.add(user)
+    session.commit()
+    session.refresh(user)
+    return user
