@@ -4,8 +4,11 @@
   import Welcome from '@/components/Welcome/index.svelte'
   import TodoList from '@/components/TodoList/index.svelte'
   import type { User } from './types'
+  import { getSessionUser } from '@/services/api'
 
   let currentUser: User | null = null
+
+  currentUser = getSessionUser()
 
   function onLogin(authorizedUser: User): void {
     currentUser = authorizedUser
