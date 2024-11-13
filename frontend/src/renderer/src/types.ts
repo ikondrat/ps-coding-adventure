@@ -18,3 +18,10 @@ export type TodoItem = {
   updated_at?: string
   created_at?: string
 }
+
+export type ResultOrError<T, E = string> = {
+  data?: T
+  error?: E
+}
+
+export type AsyncResolver<I, T, E = string> = (value: I) => Promise<ResultOrError<T, E>>

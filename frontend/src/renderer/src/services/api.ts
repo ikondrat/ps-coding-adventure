@@ -4,7 +4,7 @@ import createClient from 'openapi-fetch'
 
 import type { paths } from '../../../types/api'
 import type { User } from '@/types'
-import type { Board, TodoItem } from '../types'
+import type { AsyncResolver, Board, TodoItem } from '../types'
 
 export const client = createClient<paths>({ baseUrl: 'http://localhost:8000/' })
 
@@ -111,12 +111,7 @@ export const joinOrCreateBoard = async (boardName: string): Promise<Board> => {
   return result
 }
 
-type ResultOrError<T> = {
-  data?: T
-  error?: string
-}
-
-export const createTodoItem = async function (title: string): Promise<ResultOrError<TodoItem>> {
+export const createTodoItem: AsyncResolver<string, TodoItem> = async function (title) {
   const board = getSessionBoard()
   let resultOK: TodoItem | undefined = undefined
   let resultError: string | undefined = undefined
