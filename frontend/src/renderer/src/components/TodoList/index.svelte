@@ -8,6 +8,7 @@
   import { getCurrentUserBoard } from '@/services/todos/getCurrentUserBoard'
   import { joinOrCreateBoard } from '@/services/todos/joinOrCreateBoard'
   import { getBoardTodos } from '@/services/todos/getBoardTodos'
+  import { updateTodo } from '@/services/todos/updateTodo'
 
   let boardName = ''
   let showAddTodoForm = false
@@ -54,6 +55,13 @@
   }
 
   async function handleTodoChange(todo: TodoItem): Promise<void> {
+    const { error } = await updateTodo({
+      ...todo
+    })
+    if (error) {
+      boardError = error
+      return
+    }
     todos = [...todos.filter((t) => t.id !== todo.id), todo]
   }
 

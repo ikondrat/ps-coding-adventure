@@ -9,12 +9,18 @@ export type Board = {
   access_key: string
 }
 
-export type TodoItemState = 'TODO' | 'ONGOING' | 'DONE'
+export enum TodoState {
+  TODO = 'TODO',
+  ONGOING = 'ONGOING',
+  DONE = 'DONE'
+}
 
 export type TodoItem = {
   id: string
   title: string
-  state: TodoItemState
+  state: TodoState
+  board_id: string
+  user_id: string
   updated_at: string
   created_at: string
 }
