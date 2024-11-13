@@ -8,3 +8,13 @@ export type Board = {
   name: string
   access_key: string
 }
+
+export type TodoItemState = 'TODO' | 'ONGOING' | 'DONE'
+
+export type TodoItem = {
+  id: string
+  title: string
+  state: TodoItemState
+  updated_at?: string
+  created_at?: string
+}

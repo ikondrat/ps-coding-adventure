@@ -4,7 +4,7 @@ import createClient from 'openapi-fetch'
 
 import type { paths } from '../../../types/api'
 import type { User } from '@/types'
-import type { Board } from '../types'
+import type { Board, TodoItem } from '../types'
 
 export const client = createClient<paths>({ baseUrl: 'http://localhost:8000/' })
 
@@ -107,4 +107,47 @@ export const joinOrCreateBoard = async (boardName: string): Promise<Board> => {
   sessionStorage.setItem('currentBoard', JSON.stringify(result))
 
   return result
+}
+
+type ResultOrError<T> = {
+  data?: T
+  error?: string
+}
+
+export const createTodoItem = async function (title: string): Promise<ResultOrError<TodoItem>> {
+  const board = getSessionBoard()
+  let resultOK: TodoItem | undefined = undefined
+  let resultError: string | undefined = undefined
+
+  const user = getSessionUser()
+
+  try {
+    if (!user) {
+      throw new Error('User must be signed in to join or create a board.')
+    }
+    if (!board) {
+      throw new Error('User needs to have a board to add a todo.')
+    }
+    const { data, error } = await client.POST('/todos/', {
+      body: {
+        board_id: board.id,
+        user_id: user.id,
+        title,
+        state: 'TODO'
+      }
+    })
+
+    if (error) {
+      throw new Error('Failed to add todo: ' + error)
+    }
+
+    resultOK = data as TodoItem
+  } catch (e) {
+    resultError = String(e)
+  }
+
+  return {
+    data: resultOK,
+    error: resultError
+  }
 }

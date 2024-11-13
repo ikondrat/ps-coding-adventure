@@ -1,8 +1,12 @@
 <script lang="ts">
+  import type { TodoItem } from '../../types'
+
   export let title: string
-  export let updatedAt: string
+  export let updated_at: string
+  export let state: TodoItem['state']
+
   export let onStatusChange: (newStatus: string) => void
-  let status: string = 'TODO'
+  let status: string = state
 
   function handleStatusChange(event: Event) {
     const newStatus = (event.target as HTMLSelectElement).value
@@ -13,8 +17,8 @@
 </script>
 
 <div class="bg-white p-4 mb-2 rounded shadow">
-  <h3 class="font-semibold">{title}</h3>
-  <p class="text-gray-600">Last updated: {updatedAt}</p>
+  <h3 class="font-semibold mb-4">{title}</h3>
+  <p class="text-gray-600">Last updated: {updated_at}</p>
 
   <select bind:value={status} class="mt-2" on:change={handleStatusChange}>
     <option value="TODO">TODO</option>

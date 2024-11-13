@@ -1,16 +1,24 @@
 <script lang="ts">
   import { onMount } from 'svelte'
-  import Todo from '@/components/Todo/index.svelte'
+  import Todo from '../Todo/index.svelte'
+  import FormTodo from '../FormTodo/index.svelte'
 
-  import type { Board } from '../../types'
-  import { getCurrentUserBoard, joinOrCreateBoard } from '../../services/api'
+  import type { Board, TodoItem } from '../../types'
+  import { createTodoItem, getCurrentUserBoard, joinOrCreateBoard } from '../../services/api'
 
   let boardName = ''
+  let showAddTodoForm = false
+  let addTodoError = ''
+
+  let todosTODO: TodoItem[] = []
+  let todosONGOING: TodoItem[] = []
+  let todosDONE: TodoItem[] = []
+
   let todos = {
     todo: [
-      { id: 1, title: 'First TODO', updatedAt: new Date() },
-      { id: 2, title: 'Second TODO', updatedAt: new Date() },
-      { id: 3, title: 'Third TODO', updatedAt: new Date() }
+      // { id: 1, title: 'First TODO', updatedAt: new Date() },
+      // { id: 2, title: 'Second TODO', updatedAt: new Date() },
+      // { id: 3, title: 'Third TODO', updatedAt: new Date() }
     ],
     ongoing: [],
     done: []
@@ -23,36 +31,61 @@
     currentBoard = await getCurrentUserBoard() // Await the async function
   })
 
-  function addTodo() {
-    alert('add todo')
+  function handleAddButtonClick() {
+    showAddTodoForm = !showAddTodoForm
+  }
+
+  async function handleAddTodoSubmit(text: string) {
+    const { data, error } = await createTodoItem(text)
+
+    if (error) {
+      addTodoError = error
+      return
+    } else {
+      todosTODO = [...todos.todo, data]
+      showAddTodoForm = false
+    }
   }
 
   async function handleBoardAction() {
     const result = await joinOrCreateBoard(boardName)
-    debugger
   }
 </script>
 
 {#if currentBoard}
-  <header class="text-2xl font-bold mb-4">TODO List: {currentBoard.name}</header>
+  <div class="flex">
+    <div class="w-full p-4">
+      <!-- Changed from w-1/3 to w-1/2 -->
+      <header class="text-2xl font-bold mb-4">TODO List: {currentBoard.name}</header>
+    </div>
+    <div class="w-1/2 p-4">
+      <button on:click={handleAddButtonClick} class="bg-blue-500 text-white p-2 rounded"
+        >Add TODO</button
+      >
+      {#if showAddTodoForm}
+        <FormTodo onSubmit={handleAddTodoSubmit} error={addTodoError} />
+      {/if}
+    </div>
+    <!-- Removed the DONE section for a two-column layout -->
+  </div>
+
   <div class="flex">
     <div class="w-1/3 p-4">
       <h2 class="text-lg font-bold">TODO</h2>
-      <button on:click={addTodo} class="bg-blue-500 text-white p-2 rounded">Add TODO</button>
-      {#each todos.todo as todo, index}
-        <Todo title={todo.title} updated={todo.updatedAt.toLocaleString()} data-index={index} />
+      {#each todosTODO as todo, index}
+        <Todo {...todo} />
       {/each}
     </div>
     <div class="w-1/3 p-4">
       <h2 class="text-lg font-bold">ONGOING</h2>
-      {#each todos.ongoing as todo, index}
-        <Todo title={todo.title} updated={todo.updatedAt.toLocaleString()} data-index={index} />
+      {#each todosONGOING as todo, index}
+        <Todo {...todo} />
       {/each}
     </div>
     <div class="w-1/3 p-4">
       <h2 class="text-lg font-bold">DONE</h2>
-      {#each todos.done as todo, index}
-        <Todo title={todo.title} updated={todo.updatedAt.toLocaleString()} data-index={index} />
+      {#each todosDONE as todo, index}
+        <Todo {...todo} />
       {/each}
     </div>
   </div>
