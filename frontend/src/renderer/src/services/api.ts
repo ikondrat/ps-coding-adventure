@@ -44,7 +44,9 @@ export const getCurrentUserBoard = async (): Promise<Board | null> => {
         }
       }
     })
-    result = data as unknown as Board
+    result = data[0] as unknown as Board
+    // Store the user in session storage
+    sessionStorage.setItem('currentBoard', JSON.stringify(result))
   } catch (e) {
     // it means there is no board
     result = undefined

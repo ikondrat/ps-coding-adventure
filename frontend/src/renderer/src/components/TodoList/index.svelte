@@ -10,25 +10,13 @@
   let showAddTodoForm = false
   let addTodoError = ''
 
-  let todosTODO: TodoItem[] = []
-  let todosONGOING: TodoItem[] = []
-  let todosDONE: TodoItem[] = []
-
-  let todos = {
-    todo: [
-      // { id: 1, title: 'First TODO', updatedAt: new Date() },
-      // { id: 2, title: 'Second TODO', updatedAt: new Date() },
-      // { id: 3, title: 'Third TODO', updatedAt: new Date() }
-    ],
-    ongoing: [],
-    done: []
-  }
+  let todos: TodoItem[] = []
 
   let currentBoard: Board | undefined
 
   onMount(async () => {
     // Use onMount to fetch the board
-    currentBoard = await getCurrentUserBoard() // Await the async function
+    currentBoard = await getCurrentUserBoard()
   })
 
   function handleAddButtonClick() {
@@ -42,13 +30,18 @@
       addTodoError = error
       return
     } else {
-      todosTODO = [...todos.todo, data]
+      todos = [...todos, data]
       showAddTodoForm = false
     }
   }
 
   async function handleBoardAction() {
     const result = await joinOrCreateBoard(boardName)
+  }
+
+  async function handleTodoChange(todo: TodoItem) {
+    debugger
+    todos = [...todos.filter((t) => t.id !== todo.id), todo]
   }
 </script>
 
@@ -72,20 +65,20 @@
   <div class="flex">
     <div class="w-1/3 p-4">
       <h2 class="text-lg font-bold">TODO</h2>
-      {#each todosTODO as todo, index}
-        <Todo {...todo} />
+      {#each todos.filter((todo) => todo.state === 'TODO') as todo}
+        <Todo {todo} onChange={handleTodoChange} />
       {/each}
     </div>
     <div class="w-1/3 p-4">
       <h2 class="text-lg font-bold">ONGOING</h2>
-      {#each todosONGOING as todo, index}
-        <Todo {...todo} />
+      {#each todos.filter((todo) => todo.state === 'ONGOING') as todo}
+        <Todo {todo} onChange={handleTodoChange} />
       {/each}
     </div>
     <div class="w-1/3 p-4">
       <h2 class="text-lg font-bold">DONE</h2>
-      {#each todosDONE as todo, index}
-        <Todo {...todo} />
+      {#each todos.filter((todo) => todo.state === 'DONE') as todo}
+        <Todo {todo} onChange={handleTodoChange} />
       {/each}
     </div>
   </div>

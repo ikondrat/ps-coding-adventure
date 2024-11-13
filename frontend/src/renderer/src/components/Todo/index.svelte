@@ -1,28 +1,25 @@
 <script lang="ts">
-  import type { TodoItem } from '../../types'
+  import type { TodoItem, TodoItemState } from '../../types'
 
-  export let title: string
-  export let updated_at: string
-  export let state: TodoItem['state']
+  export let todo: TodoItem
 
-  export let onStatusChange: (newStatus: string) => void
-  let status: string = state
+  export let onChange: (todo: TodoItem) => void
 
-  function handleStatusChange(event: Event) {
-    const newStatus = (event.target as HTMLSelectElement).value
-    status = newStatus
-    alert('status updated')
-    onStatusChange(newStatus)
+  function handleStatusChange(event: Event): void {
+    onChange({
+      ...todo,
+      state: (event.target as HTMLSelectElement).value as TodoItemState
+    })
   }
 </script>
 
 <div class="bg-white p-4 mb-2 rounded shadow">
-  <h3 class="font-semibold mb-4">{title}</h3>
-  <p class="text-gray-600">Last updated: {updated_at}</p>
+  <h3 class="font-semibold mb-4">{todo.title}</h3>
+  <p class="text-gray-600">Last updated: {todo.updated_at}</p>
 
-  <select bind:value={status} class="mt-2" on:change={handleStatusChange}>
+  <select bind:value={todo.state} class="mt-2" on:change={handleStatusChange}>
     <option value="TODO">TODO</option>
-    <option value="Ongoing">Ongoing</option>
-    <option value="Done">Done</option>
+    <option value="ONGOING">Ongoing</option>
+    <option value="DONE">Done</option>
   </select>
 </div>
