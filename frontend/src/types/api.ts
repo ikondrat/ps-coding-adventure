@@ -184,8 +184,11 @@ export interface components {
         };
         /** Todo */
         Todo: {
-            /** Id */
-            id?: string | null;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id?: string;
             /** Title */
             title: string;
             /** @default TODO */
@@ -211,11 +214,59 @@ export interface components {
              */
             board_id?: string;
         };
+        /** TodoInput */
+        TodoInput: {
+            /** Title */
+            title: string;
+            /** @default TODO */
+            state: components["schemas"]["TodoState"] | null;
+            /**
+             * User Id
+             * Format: uuid
+             */
+            user_id: string;
+            /**
+             * Board Id
+             * Format: uuid
+             */
+            board_id: string;
+        };
         /**
          * TodoState
          * @enum {string}
          */
         TodoState: "TODO" | "ONGOING" | "DONE";
+        /** TodoView */
+        TodoView: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Title */
+            title: string;
+            state: components["schemas"]["TodoState"];
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /**
+             * Updated At
+             * Format: date-time
+             */
+            updated_at: string;
+            /**
+             * User Id
+             * Format: uuid
+             */
+            user_id: string;
+            /**
+             * Board Id
+             * Format: uuid
+             */
+            board_id: string;
+        };
         /** User */
         User: {
             /** Id */
@@ -603,7 +654,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["Todo"];
+                "application/json": components["schemas"]["TodoInput"];
             };
         };
         responses: {
@@ -613,7 +664,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["Todo"];
+                    "application/json": components["schemas"]["TodoView"];
                 };
             };
             /** @description Validation Error */
@@ -648,7 +699,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["Todo"];
+                    "application/json": components["schemas"]["TodoView"];
                 };
             };
             /** @description Validation Error */
@@ -682,7 +733,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["Todo"][];
+                    "application/json": components["schemas"]["TodoView"][];
                 };
             };
             /** @description Validation Error */

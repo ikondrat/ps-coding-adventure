@@ -4,7 +4,7 @@ import createClient from 'openapi-fetch'
 
 import type { paths } from '../../../types/api'
 import type { User } from '@/types'
-import type { AsyncResolver, Board, TodoItem } from '../types'
+import type { AsyncResolver, Board, ResultOrError, TodoItem } from '../types'
 
 export const client = createClient<paths>({ baseUrl: 'http://localhost:8000/' })
 
@@ -45,6 +45,7 @@ export const getCurrentUserBoard = async (): Promise<Board | null> => {
       }
     })
     result = data[0] as unknown as Board
+
     // Store the user in session storage
     sessionStorage.setItem('currentBoard', JSON.stringify(result))
   } catch (e) {
@@ -53,6 +54,43 @@ export const getCurrentUserBoard = async (): Promise<Board | null> => {
   }
 
   return result
+}
+
+export const getBoardTodos = async (): Promise<ResultOrError<TodoItem[], string>> => {
+  const board = getSessionBoard()
+  const user = getSessionUser()
+
+  let resultOk: TodoItem[] | undefined = undefined
+  let resultError: string | undefined = undefined
+
+  if (!board || !user) {
+    return {
+      data: undefined,
+      error: 'User must be signed in and have a board to get todos.'
+    }
+  }
+
+  try {
+    const { data, error } = await client.GET('/boards/{board_id}/todos/', {
+      params: {
+        path: {
+          board_id: board.id
+        }
+      }
+    })
+
+    if (error) {
+      resultError = error.detail.toString()
+    }
+    resultOk = data
+  } catch (e) {
+    resultError = e.toString()
+  }
+
+  return {
+    data: resultOk,
+    error: resultError
+  }
 }
 
 export const getSessionUser = (): User | null => {
