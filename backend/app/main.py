@@ -2,7 +2,6 @@ from typing import Annotated
 from fastapi import Depends, FastAPI, HTTPException, Query
 from sqlmodel import Session, select
 from uuid import UUID
-from contextlib import asynccontextmanager
 from fastapi.middleware.cors import CORSMiddleware
 
 from db import init_db, get_session
@@ -21,10 +20,9 @@ app.add_middleware(
 )
 
 
-@asynccontextmanager
-async def lifespan(app: FastAPI):
+@app.on_event("startup")
+async def startup():
     init_db()
-    yield
 
 
 app.include_router(users.router)
