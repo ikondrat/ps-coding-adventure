@@ -15,8 +15,8 @@ export type TodoItem = {
   id: string
   title: string
   state: TodoItemState
-  updated_at?: string
-  created_at?: string
+  updated_at: string
+  created_at: string
 }
 
 export type ResultOrError<T, E = string> = {
