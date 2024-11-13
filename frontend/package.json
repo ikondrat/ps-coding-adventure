@@ -21,7 +21,7 @@
     "build:linux": "npm run build && electron-builder --linux",
     "test": "npx vitest",
     "coverage": "npx vitest run --coverage",
-    "get-api-types": "openapi-typescript http://localhost:8000/openapi.json -o src/types/api.ts"
+    "get-api-types": "openapi-typescript http://localhost:8000/openapi.json -o src/renderer/src/types.api.ts"
   },
   "dependencies": {
     "@electron-toolkit/preload": "^3.0.1",

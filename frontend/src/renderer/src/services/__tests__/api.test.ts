@@ -1,7 +1,10 @@
-import { client } from '../api'
 import { describe, it, expect, beforeEach, vi } from 'vitest'
-import { signin, getCurrentUserBoard, getSessionUser, getBoardTodos } from '../api'
 import type { User, Board, TodoItem } from '@/types'
+import { client } from '../todos/client'
+import { getBoardTodos } from '../todos/getBoardTodos'
+import { getCurrentUserBoard } from '../todos/getCurrentUserBoard'
+import { getSessionUser } from '../todos/getSessionUser'
+import { signin } from '../todos/signin'
 
 // Mock the sessionStorage
 const mockSessionStorage = (() => {
@@ -97,7 +100,7 @@ describe('API Service Tests', () => {
 
   it('getBoardTodos should return todos if user and board are present in sessionStorage', async () => {
     const user: User = { id: '1', name: 'Test User' }
-    const board: Board = { id: 'board1', name: 'Test Board' }
+    const board: Board = { id: 'board1', name: 'Test Board', access_key: 'board1' }
     const todos: TodoItem[] = [
       { id: 'todo1', title: 'Test Todo', board_id: board.id, state: 'TODO' }
     ]
@@ -116,7 +119,7 @@ describe('API Service Tests', () => {
 
   it('getBoardTodos should return an error message if API call fails', async () => {
     const user: User = { id: '1', name: 'Test User' }
-    const board: Board = { id: 'board1', name: 'Test Board' }
+    const board: Board = { id: 'board1', name: 'Test Board', access_key: 'board1' }
 
     window.sessionStorage.setItem('currentUser', JSON.stringify(user))
     window.sessionStorage.setItem('currentBoard', JSON.stringify(board))

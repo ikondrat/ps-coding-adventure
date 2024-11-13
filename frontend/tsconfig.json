@@ -6,7 +6,7 @@
     "src/renderer/src/**/*.svelte",
     "src/preload/*.d.ts",
     "src/setupTest.ts"
-  ],
+, "src/renderer/types/base.ts", "src/renderer/types/types-api.ts"  ],
   "compilerOptions": {
     "verbatimModuleSyntax": true,
     "useDefineForClassFields": true,
@@ -14,10 +14,10 @@
     "allowJs": true,
     "checkJs": true,
     "lib": ["ESNext", "DOM", "DOM.Iterable"],
-    "baseUrl": ".",
+    "baseUrl": "./",
     "paths": {
-      "@/*": ["src/*"]
-    }
+      "@/*": ["src/renderer/src/*"],
+    },
   },
   "references": [{ "path": "./tsconfig.node.json" }]
 }

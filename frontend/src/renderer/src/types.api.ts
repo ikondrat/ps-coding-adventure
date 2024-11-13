@@ -166,16 +166,22 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
-        /** Board */
-        Board: {
-            /** Id */
-            id?: string | null;
+        /** BoardInput */
+        BoardInput: {
             /** Name */
             name: string;
             /** Access Key */
             access_key?: string | null;
-            /** User Id */
-            user_id?: string | null;
+        };
+        /** BoardView */
+        BoardView: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Name */
+            name: string;
         };
         /** HTTPValidationError */
         HTTPValidationError: {
@@ -267,10 +273,18 @@ export interface components {
              */
             board_id: string;
         };
-        /** User */
-        User: {
-            /** Id */
-            id?: string | null;
+        /** UserInput */
+        UserInput: {
+            /** Name */
+            name: string;
+        };
+        /** UserView */
+        UserView: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
             /** Name */
             name: string;
         };
@@ -310,7 +324,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["User"][];
+                    "application/json": components["schemas"]["UserView"][];
                 };
             };
             /** @description Validation Error */
@@ -333,7 +347,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["User"];
+                "application/json": components["schemas"]["UserInput"];
             };
         };
         responses: {
@@ -343,7 +357,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["User"];
+                    "application/json": components["schemas"]["UserView"];
                 };
             };
             /** @description Validation Error */
@@ -374,7 +388,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["User"];
+                    "application/json": components["schemas"]["UserView"];
                 };
             };
             /** @description Validation Error */
@@ -399,7 +413,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["User"];
+                "application/json": components["schemas"]["UserView"];
             };
         };
         responses: {
@@ -409,7 +423,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["User"];
+                    "application/json": components["schemas"]["UserView"];
                 };
             };
             /** @description Validation Error */
@@ -471,7 +485,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["Board"][];
+                    "application/json": components["schemas"]["BoardView"][];
                 };
             };
             /** @description Validation Error */
@@ -494,7 +508,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["User"];
+                "application/json": components["schemas"]["UserInput"];
             };
         };
         responses: {
@@ -504,7 +518,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["User"];
+                    "application/json": components["schemas"]["UserView"];
                 };
             };
             /** @description Validation Error */
@@ -536,7 +550,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["Board"][];
+                    "application/json": components["schemas"]["BoardView"][];
                 };
             };
             /** @description Validation Error */
@@ -559,7 +573,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["Board"];
+                "application/json": components["schemas"]["BoardInput"];
             };
         };
         responses: {
@@ -569,7 +583,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["Board"];
+                    "application/json": components["schemas"]["BoardView"];
                 };
             };
             /** @description Validation Error */
@@ -600,7 +614,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["Board"];
+                    "application/json": components["schemas"]["BoardView"];
                 };
             };
             /** @description Validation Error */
