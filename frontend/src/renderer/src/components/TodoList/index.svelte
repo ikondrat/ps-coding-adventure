@@ -4,7 +4,9 @@
   import FormTodo from '../FormTodo/index.svelte'
 
   import type { Board, TodoItem } from '../../types'
-  import { createTodoItem, getCurrentUserBoard, joinOrCreateBoard } from '../../services/api'
+  import { createTodoItem } from '@/services/todos/createTodoItem'
+  import { getCurrentUserBoard } from '@/services/todos/getCurrentUserBoard'
+  import { joinOrCreateBoard } from '@/services/todos/joinOrCreateBoard'
 
   let boardName = ''
   let showAddTodoForm = false
@@ -19,11 +21,11 @@
     currentBoard = await getCurrentUserBoard()
   })
 
-  function handleAddButtonClick() {
+  function handleAddButtonClick(): void {
     showAddTodoForm = !showAddTodoForm
   }
 
-  async function handleAddTodoSubmit(text: string) {
+  async function handleAddTodoSubmit(text: string): void {
     const { data, error } = await createTodoItem(text)
 
     if (error) {
@@ -35,12 +37,11 @@
     }
   }
 
-  async function handleBoardAction() {
-    const result = await joinOrCreateBoard(boardName)
+  async function handleBoardAction(): Promise<void> {
+    await joinOrCreateBoard(boardName)
   }
 
-  async function handleTodoChange(todo: TodoItem) {
-    debugger
+  async function handleTodoChange(todo: TodoItem): Promise<void> {
     todos = [...todos.filter((t) => t.id !== todo.id), todo]
   }
 </script>

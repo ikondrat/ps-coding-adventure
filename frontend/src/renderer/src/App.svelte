@@ -3,8 +3,8 @@
   import Layout from '@/components/Layout/index.svelte'
   import Welcome from '@/components/Welcome/index.svelte'
   import TodoList from '@/components/TodoList/index.svelte'
-  import type { User } from './types'
-  import { getSessionUser } from '@/services/api'
+  import type { User } from '@/types'
+  import { getSessionUser } from '@/services/todos/getSessionUser'
 
   let currentUser: User | null = null
 
