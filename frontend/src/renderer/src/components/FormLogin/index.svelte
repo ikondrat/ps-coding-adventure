@@ -1,6 +1,7 @@
 <script lang="ts">
   import { signin } from '@/services/todos/signin'
   import type { User } from '../../types'
+  import { handleEnter } from '@/utils'
   export let onLogin: (user: User) => void
   let userName = ''
 
@@ -23,6 +24,7 @@
         type="text"
         placeholder="Enter your name"
         bind:value={userName}
+        on:keydown={handleEnter(login)}
         class="border p-2 mb-4 w-full"
       />
     </label>
