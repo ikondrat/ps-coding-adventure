@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { format } from 'date-fns'
   import { isValidTransition } from '@/utils'
   import type { TodoItem, TodoState } from '../../types'
 
@@ -6,6 +7,7 @@
   export let onChange: (todo: TodoItem) => void
 
   let todoError = ''
+  const updatedAt = format(new Date(todo.updated_at), 'PPpp')
 
   function handleStatusChange(event: Event): void {
     const prevState = todo.state
@@ -29,7 +31,7 @@
   {#if todoError}
     <p class="text-red-500">{todoError}</p>
   {/if}
-  <p class="text-gray-600">Last updated: {todo.updated_at}</p>
+  <p class="text-gray-600">updated: {updatedAt}</p>
 
   <select class="mt-2" on:change={handleStatusChange}>
     <option value="TODO" selected={todo.state === 'TODO'}>TODO</option>

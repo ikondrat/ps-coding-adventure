@@ -26,6 +26,7 @@
   "dependencies": {
     "@electron-toolkit/preload": "^3.0.1",
     "@electron-toolkit/utils": "^3.0.0",
+    "date-fns": "^4.1.0",
     "electron-updater": "^6.1.7",
     "openapi-fetch": "^0.13.0",
     "openapi-typescript": "^7.4.3"
