@@ -2,7 +2,7 @@ from typing import Annotated
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlmodel import Session, select
 from uuid import UUID
-from models import User, Board
+from models import BoardInput, BoardView, User, Board
 from db import get_session
 
 router = APIRouter()
@@ -10,7 +10,7 @@ SessionDep = Annotated[Session, Depends(get_session)]
 
 
 @router.post("/boards/")
-def create_board(board: Board, session: SessionDep) -> Board:
+def create_board(board: BoardInput, session: SessionDep) -> BoardView:
     session.add(board)
 
     session.commit()
@@ -24,14 +24,14 @@ def read_boards(
     session: SessionDep,
     offset: int = 0,
     limit: Annotated[int, Query(le=100)] = 100,
-) -> list[Board]:
+) -> list[BoardView]:
     boards = session.exec(select(Board).offset(offset).limit(limit)).all()
 
     return boards
 
 
 @router.get("/boards/{access_key}")
-def read_board(access_key: str, session: SessionDep) -> Board:
+def read_board(access_key: str, session: SessionDep) -> BoardView:
     board = session.exec(
         select(Board).where(Board.access_key == access_key)
     ).one_or_none()

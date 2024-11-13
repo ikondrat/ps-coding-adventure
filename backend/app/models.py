@@ -21,6 +21,15 @@ class User(SQLModel, table=True):
     todos: list["Todo"] = Relationship(back_populates="user", cascade_delete=True)
 
 
+class UserInput(SQLModel):
+    name: str
+
+
+class UserView(SQLModel):
+    id: UUID
+    name: str
+
+
 class Board(SQLModel, table=True):
     id: UUID | None = Field(default_factory=uuid4, primary_key=True)
     name: str = Field(index=True, unique=True)
@@ -31,6 +40,33 @@ class Board(SQLModel, table=True):
     user: User = Relationship(back_populates="boards")
 
     todos: list["Todo"] = Relationship(back_populates="board", cascade_delete=True)
+
+
+class BoardInput(SQLModel):
+    name: str
+    access_key: str | None = Field(default_factory=lambda: secrets.token_hex(16))
+
+
+class BoardView(SQLModel):
+    id: UUID
+    name: str
+    access_key: str
+
+
+class Todo(SQLModel, table=True):
+    id: UUID = Field(default_factory=uuid4, primary_key=True)
+    title: str
+    state: TodoState = Field(default=TodoState.TODO)
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+    updated_at: datetime = Field(default_factory=datetime.utcnow)
+
+    # Define a relationship to User
+    user_id: UUID = Field(default=None, foreign_key="user.id")
+    user: User | None = Relationship(back_populates="todos")
+
+    # Define a relationship to Board
+    board_id: UUID = Field(default=None, foreign_key="board.id")
+    board: Board | None = Relationship(back_populates="todos")
 
 
 class TodoInput(SQLModel):
@@ -48,19 +84,3 @@ class TodoView(SQLModel):
     updated_at: datetime
     user_id: UUID
     board_id: UUID
-
-
-class Todo(SQLModel, table=True):
-    id: UUID = Field(default_factory=uuid4, primary_key=True)
-    title: str
-    state: TodoState = Field(default=TodoState.TODO)
-    created_at: datetime = Field(default_factory=datetime.utcnow)
-    updated_at: datetime = Field(default_factory=datetime.utcnow)
-
-    # Define a relationship to User
-    user_id: UUID = Field(default=None, foreign_key="user.id")
-    user: User | None = Relationship(back_populates="todos")
-
-    # Define a relationship to Board
-    board_id: UUID = Field(default=None, foreign_key="board.id")
-    board: Board | None = Relationship(back_populates="todos")
