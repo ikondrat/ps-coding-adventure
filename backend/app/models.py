@@ -1,4 +1,4 @@
-from typing import Annotated
+from typing import Optional
 from sqlmodel import Field, SQLModel, Relationship
 from uuid import UUID, uuid4
 from datetime import datetime
@@ -33,8 +33,25 @@ class Board(SQLModel, table=True):
     todos: list["Todo"] = Relationship(back_populates="board", cascade_delete=True)
 
 
+class TodoInput(SQLModel):
+    title: str
+    state: Optional[TodoState] = TodoState.TODO
+    user_id: UUID
+    board_id: UUID
+
+
+class TodoView(SQLModel):
+    id: UUID
+    title: str
+    state: TodoState
+    created_at: datetime
+    updated_at: datetime
+    user_id: UUID
+    board_id: UUID
+
+
 class Todo(SQLModel, table=True):
-    id: UUID | None = Field(default_factory=uuid4, primary_key=True)
+    id: UUID = Field(default_factory=uuid4, primary_key=True)
     title: str
     state: TodoState = Field(default=TodoState.TODO)
     created_at: datetime = Field(default_factory=datetime.utcnow)

@@ -2,7 +2,7 @@ from typing import Annotated
 from uuid import UUID
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlmodel import Session, select
-from models import Board, Todo
+from models import Todo, TodoInput, TodoView
 from db import get_session
 from datetime import datetime
 
@@ -11,7 +11,7 @@ SessionDep = Annotated[Session, Depends(get_session)]
 
 
 @router.post("/todos/")
-def create_todo(todo: Todo, session: SessionDep) -> Todo:
+def create_todo(todo: TodoInput, session: SessionDep) -> TodoView:
     session.add(todo)
 
     session.commit()
@@ -21,7 +21,7 @@ def create_todo(todo: Todo, session: SessionDep) -> Todo:
 
 
 @router.put("/todos/{todo_id}")
-def update_todo(todo_id: UUID, updated_todo: Todo, session: SessionDep) -> Todo:
+def update_todo(todo_id: UUID, updated_todo: Todo, session: SessionDep) -> TodoView:
     todo = session.exec(select(Todo).where(Todo.id == todo_id)).one_or_none()
     if not todo:
         raise HTTPException(status_code=404, detail="Todo not found")
@@ -53,7 +53,7 @@ def read_todos(
     session: SessionDep,
     offset: int = 0,
     limit: Annotated[int, Query(le=100)] = 100,
-) -> list[Todo]:
+) -> list[TodoView]:
     todos = session.exec(
         select(Todo).where(Todo.board_id == board_id).offset(offset).limit(limit)
     ).all()
