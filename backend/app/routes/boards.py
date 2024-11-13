@@ -10,7 +10,8 @@ SessionDep = Annotated[Session, Depends(get_session)]
 
 
 @router.post("/boards/")
-def create_board(board: BoardInput, session: SessionDep) -> BoardView:
+def create_board(board_input: BoardInput, session: SessionDep) -> BoardView:
+    board = Board(**board_input.model_dump())
     session.add(board)
 
     session.commit()

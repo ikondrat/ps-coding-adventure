@@ -10,7 +10,8 @@ SessionDep = Annotated[Session, Depends(get_session)]
 
 
 @router.post("/users/")
-def create_user(user: UserInput, session: SessionDep) -> UserView:
+def create_user(user_input: UserInput, session: SessionDep) -> UserView:
+    user = User(**user_input.model_dump())
     session.add(user)
     session.commit()
     session.refresh(user)
@@ -71,7 +72,8 @@ def delete_user(user_id: UUID, session: SessionDep):
 
 
 @router.post("/signin")
-def signin_or_signup(user: UserInput, session: SessionDep) -> UserView:
+def signin_or_signup(user_input: UserInput, session: SessionDep) -> UserView:
+    user = User(**user_input.model_dump())
     existing_user = session.exec(
         select(User).where(User.name == user.name)
     ).one_or_none()

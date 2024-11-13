@@ -11,7 +11,8 @@ SessionDep = Annotated[Session, Depends(get_session)]
 
 
 @router.post("/todos/")
-def create_todo(todo: TodoInput, session: SessionDep) -> TodoView:
+def create_todo(todo_input: TodoInput, session: SessionDep) -> TodoView:
+    todo = Todo(**todo_input.model_dump())
     session.add(todo)
 
     session.commit()
