@@ -9,6 +9,7 @@
   import { joinOrCreateBoard } from '@/services/todos/joinOrCreateBoard'
   import { getBoardTodos } from '@/services/todos/getBoardTodos'
   import { updateTodo } from '@/services/todos/updateTodo'
+  import { handleEnter } from '@/utils'
 
   let boardName = ''
   let showAddTodoForm = false
@@ -145,6 +146,7 @@
       type="text"
       placeholder="Enter board name"
       bind:value={boardName}
+      on:keydown={handleEnter(handleBoardAction)}
       class="border p-2 mb-2"
     />
     <button on:click={handleBoardAction} class="bg-blue-500 text-white p-2 rounded">Proceed</button>

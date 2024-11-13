@@ -1,10 +1,11 @@
 <script lang="ts">
+  import { handleEnter } from '@/utils'
   import AlertError from '../AlertError/index.svelte'
   export let onSubmit: (text: string) => void
   let todoText = ''
   export let error = ''
 
-  function handleSubmit(): void {
+  function addTodo(): void {
     onSubmit(todoText)
   }
 </script>
@@ -20,6 +21,7 @@
         type="text"
         placeholder="Enter text"
         bind:value={todoText}
+        on:keydown={handleEnter(addTodo)}
         class="border p-2 mb-4 w-full"
       />
     </label>
@@ -31,6 +33,6 @@
       </div>
     {/if}
 
-    <button on:click={handleSubmit} class="bg-blue-500 text-white p-2 rounded w-full">add</button>
+    <button on:click={addTodo} class="bg-blue-500 text-white p-2 rounded w-full">add</button>
   </div>
 </div>
