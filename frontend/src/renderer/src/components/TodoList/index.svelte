@@ -51,7 +51,16 @@
   }
 
   async function handleBoardAction(): Promise<void> {
-    await joinOrCreateBoard(boardName)
+    currentBoard = await joinOrCreateBoard(boardName)
+    if (currentBoard) {
+      const { data, error } = await getBoardTodos(currentBoard.id)
+
+      if (error) {
+        boardError = error
+      } else {
+        todos = [...data]
+      }
+    }
   }
 
   async function handleTodoChange(todo: TodoItem): Promise<void> {
