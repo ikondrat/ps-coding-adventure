@@ -39,6 +39,7 @@ def update_todo(todo_id: UUID, updated_todo: Todo, session: SessionDep) -> TodoV
 
     todo.title = updated_todo.title
     todo.state = updated_todo.state
+    todo.state_details = updated_todo.state_details
     todo.updated_at = datetime.utcnow()  # Assuming last_updated is a field in Todo
 
     session.add(todo)
