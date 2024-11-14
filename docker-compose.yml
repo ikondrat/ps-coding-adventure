@@ -1,4 +1,18 @@
 services:
+  backend:
+    image: backend
+    volumes:
+      - ./backend:/app
+    build:
+      context: 'backend'
+    ports:
+      - "8000:8000"
+    restart: always
+    environment:
+      DATABASE_URL: postgresql://postgres:postgrespassword@postgres/postgres
+    depends_on:
+      postgres:
+        condition: service_healthy
   postgres:
     image: postgres:17-alpine
     stdin_open: true
