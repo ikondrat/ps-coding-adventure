@@ -7,9 +7,8 @@
 -   fastapi to create the API
 -   uvicorn to run the server
 -   requests to make requests to the API
--   sqlalchemy to interact with the database
+-   sqlmodel to interact with the database
 -   postgresql as the database
--   alembic to manage the database migrations
 
 ## Run
 
