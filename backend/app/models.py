@@ -57,6 +57,7 @@ class Todo(SQLModel, table=True):
     id: UUID = Field(default_factory=uuid4, primary_key=True)
     title: str
     state: TodoState = Field(default=TodoState.TODO)
+    state_details: str = Field(default=None)
     created_at: datetime = Field(default_factory=datetime.utcnow)
     updated_at: datetime = Field(default_factory=datetime.utcnow)
 
@@ -72,6 +73,7 @@ class Todo(SQLModel, table=True):
 class TodoInput(SQLModel):
     title: str
     state: Optional[TodoState] = TodoState.TODO
+    state_details: str
     user_id: UUID
     board_id: UUID
 
@@ -80,6 +82,7 @@ class TodoView(SQLModel):
     id: UUID
     title: str
     state: TodoState
+    state_details: str
     created_at: datetime
     updated_at: datetime
     user_id: UUID

@@ -7,6 +7,7 @@
   export let onChange: (todo: TodoItem) => void
 
   let todoError = ''
+  let state_details = ''
   const updatedAt = format(new Date(todo.updated_at), 'PPpp')
 
   function handleStatusChange(event: Event): void {
@@ -14,10 +15,14 @@
     const newState = (event.target as HTMLSelectElement).value as TodoState
 
     if (isValidTransition(prevState, newState)) {
+      if (newState === 'DONE') {
+        state_details = window.prompt('Enter details for the completed task')
+      }
       todoError = ''
       onChange({
         ...todo,
         state: newState,
+        state_details,
         updated_at: new Date().toISOString() // update timestamp
       })
     } else {
@@ -38,4 +43,8 @@
     <option value="ONGOING" selected={todo.state === 'ONGOING'}>Ongoing</option>
     <option value="DONE" selected={todo.state === 'DONE'}>Done</option>
   </select>
+
+  {#if todo.state_details}
+    <p class="text-gray-600">State details: {todo.state_details}</p>
+  {/if}
 </div>

@@ -170,6 +170,11 @@ export interface components {
         BoardInput: {
             /** Name */
             name: string;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
             /** Access Key */
             access_key?: string | null;
         };
@@ -182,43 +187,13 @@ export interface components {
             id: string;
             /** Name */
             name: string;
+            /** Access Key */
+            access_key: string;
         };
         /** HTTPValidationError */
         HTTPValidationError: {
             /** Detail */
             detail?: components["schemas"]["ValidationError"][];
-        };
-        /** Todo */
-        Todo: {
-            /**
-             * Id
-             * Format: uuid
-             */
-            id?: string;
-            /** Title */
-            title: string;
-            /** @default TODO */
-            state: components["schemas"]["TodoState"];
-            /**
-             * Created At
-             * Format: date-time
-             */
-            created_at?: string;
-            /**
-             * Updated At
-             * Format: date-time
-             */
-            updated_at?: string;
-            /**
-             * User Id
-             * Format: uuid
-             */
-            user_id?: string;
-            /**
-             * Board Id
-             * Format: uuid
-             */
-            board_id?: string;
         };
         /** TodoInput */
         TodoInput: {
@@ -226,6 +201,8 @@ export interface components {
             title: string;
             /** @default TODO */
             state: components["schemas"]["TodoState"] | null;
+            /** State Details */
+            state_details: string;
             /**
              * User Id
              * Format: uuid
@@ -252,6 +229,8 @@ export interface components {
             /** Title */
             title: string;
             state: components["schemas"]["TodoState"];
+            /** State Details */
+            state_details: string;
             /**
              * Created At
              * Format: date-time
@@ -277,14 +256,16 @@ export interface components {
         UserInput: {
             /** Name */
             name: string;
-        };
-        /** UserView */
-        UserView: {
             /**
              * Id
              * Format: uuid
              */
             id: string;
+        };
+        /** UserView */
+        UserView: {
+            /** Id */
+            id?: string | null;
             /** Name */
             name: string;
         };
@@ -703,7 +684,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["Todo"];
+                "application/json": components["schemas"]["TodoView"];
             };
         };
         responses: {

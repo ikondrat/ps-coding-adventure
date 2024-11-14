@@ -21,6 +21,7 @@ export type TodoItem = {
   state: TodoState
   board_id: string
   user_id: string
+  state_details: string
   updated_at: string
   created_at: string
 }

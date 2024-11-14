@@ -22,7 +22,8 @@ export const createTodoItem: AsyncResolver<string, TodoItem> = async function (t
         board_id: board.id,
         user_id: user.id,
         title,
-        state: 'TODO'
+        state: 'TODO',
+        state_details: ''
       }
     })
 
