@@ -22,8 +22,11 @@ docker-compose up backend
 
 This will launch the backend server on port 8000, along with a PostgreSQL instance as required.
 
-Backend API: Access the backend at http://localhost:8000.
-API Documentation: View interactive API documentation at http://localhost:8000/docs.
+Backend API:
+Access the backend at http://localhost:8000.
+
+API Documentation:
+View interactive API documentation at http://localhost:8000/docs.
 
 ### 2. Start the Frontend Application
 
